@@ -17,3 +17,8 @@ print("\n", resultado)
 texto = "1234567890"
 resultado = texto.isdigit()
 print("\n", resultado)
+
+#metodo lstrip () elimina los espacios en blanco
+texto = "\nS T E V E N S C A M B R A N E S"
+resultado = texto.lstrip()
+print(resultado)
