@@ -4,4 +4,4 @@ gradosCelsius = float(input("Ingresa los grados Celsius: "))#creacion de variabl
 
 gradosFahrenheit = (gradosCelsius * 9/5) + 32 #formulada
 
-print("\nLa conversión", gradosCelsius, "°C", " a Fahrenheit es: ", gradosFahrenheit, "°F")#salida de datos
+print("\nLa conversión", gradosCelsius, "°C", "a Fahrenheit es: ", gradosFahrenheit, "°F")#salida de datos
