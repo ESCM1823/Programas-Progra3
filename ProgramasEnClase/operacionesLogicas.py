@@ -19,5 +19,3 @@ try:
         print("No puedes votar")
 except ValueError:
     print("Debes ingresar una edad valida")
-
-#ejercicio
