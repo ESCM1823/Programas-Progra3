@@ -1,8 +1,6 @@
 #0901-22-940-Edwin-Stevens-Cambranes-Mendizábal
-#convertir una distancia en Kilómetros a una distancia en millas
-
+#convertir una distancia en Kilómetros a una distancia en millas ejercicio del libro
 '''
-
 ingresoKm = float(input("Ingresa la distancia en Kilómetros: "))
 #condicion
 if (ingresoKm < 0):
@@ -12,7 +10,6 @@ else:
     print("El valor ingresado fue de: ", ingresoKm, "Km y su conversion a millas es de: ", convertir, "millas")
 
 '''
-
 #Segunda opcion de resolver dicho programa
 
 #funcion que se llama kmNegativo y va a almacenar la variable KM que dice que va a ser km mayor que 0
