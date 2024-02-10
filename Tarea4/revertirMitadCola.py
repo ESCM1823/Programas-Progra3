@@ -11,7 +11,7 @@ def revertirMitad(cola):
     longitud = len(cola)
     mitad = longitud // 2
     
-#simplemente indica que estamos iterando mitad veces, pero no estamos utilizando los valores del índice en el bucle. 
+    #simplemente indica que estamos iterando mitad veces, pero no estamos utilizando los valores del índice en el bucle. 
 
     # Transferir la mitad de la cola a la pila
     for _ in range(mitad):
@@ -28,7 +28,7 @@ def revertirMitad(cola):
     return cola
 
 # Datos de ejemplo
-enCola = deque([1, 2, 3, 4, 5])
+enCola = deque([1, 2, 3, 4, 5, 6, 7, 8, 9])
 print("Cola original:", enCola)
 revertirMitad(enCola)
 print("Cola con la mitad revertida:", enCola)
