@@ -50,5 +50,5 @@ def atencionFila(elementos):
         print("Todos los Clientes han sido atendidos ;)")
 
 #Clientes dentro de la lista
-elementos = ["Cliente 1", "Cliente 2", "Cliente 3", "Cliente 4", "Cliente 5"]
+elementos = ["Cliente 1", "Cliente 2", "Cliente 3", "Cliente 4", "Cliente 5", "Cliente 6", "Cliente 7"]
 atencionFila(elementos)
