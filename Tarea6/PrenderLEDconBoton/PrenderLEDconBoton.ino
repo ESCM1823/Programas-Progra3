@@ -71,6 +71,7 @@ void setup() {
   pinMode(11, INPUT_PULLUP);
   pinMode(12, INPUT_PULLUP);
   pinMode(13, INPUT_PULLUP);
+
   Serial.begin(9600);
 }
 
@@ -96,19 +97,13 @@ void loop() {
     } else if (estadoMonitor == 'E') {
       digitalWrite(2, LOW);
       digitalWrite(3, LOW);
-      Serial.println("Grupo Led A Apagados");
-    } else if (estadoMonitor == 'F') {
       digitalWrite(4, LOW);
       digitalWrite(5, LOW);
-      Serial.println("Grupo Led B Apagados");
-    } else if (estadoMonitor == 'G') {
       digitalWrite(6, LOW);
       digitalWrite(7, LOW);
-      Serial.println("Grupo Led C Apagados");
-    } else if (estadoMonitor == 'H') {
       digitalWrite(8, LOW);
       digitalWrite(9, LOW);
-      Serial.println("Grupo Led D Apagados");
+      Serial.println("TODAS las LEDs fueron Apagadas");
     }
   } else if (digitalRead(10) == LOW) {
     Serial.write('A');

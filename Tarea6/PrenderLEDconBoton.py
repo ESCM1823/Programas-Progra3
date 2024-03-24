@@ -45,36 +45,37 @@ def enviar_comando(comando):
 ventana = tk.Tk()
 ventana.title("Dashboard")
 
-# Crear elementos visuales en el dashboard (por ejemplo, círculos para representar los LEDs y rectángulos para los botones)
+# Centrar la ventana en la pantalla
+ancho_ventana = 700
+alto_ventana = 100
+ancho_pantalla = ventana.winfo_screenwidth()
+alto_pantalla = ventana.winfo_screenheight()
+x_pos = (ancho_pantalla - ancho_ventana) // 2
+y_pos = (alto_pantalla - alto_ventana) // 2
+ventana.geometry(f'{ancho_ventana}x{alto_ventana}+{x_pos}+{y_pos}')
 
-# Funciones para manejar los botones
+# Crear un contenedor para los botones y organizarlos horizontalmente
+frame_botones = tk.Frame(ventana)
+frame_botones.pack()
+
 def boton_presionado(comando):
     enviar_comando(comando)
 
 # Ejemplo de creación de botones
-boton_A = tk.Button(ventana, text="Prender 1er Grupo", command=lambda: boton_presionado('A'))
-boton_A.pack()
+boton_A = tk.Button(frame_botones, text="Prender 1er Grupo", command=lambda: boton_presionado('A'))
+boton_A.pack(side=tk.LEFT, padx=5, pady=5)
 
-boton_B = tk.Button(ventana, text="Prender 2do Grupo", command=lambda: boton_presionado('B'))
-boton_B.pack()
+boton_B = tk.Button(frame_botones, text="Prender 2do Grupo", command=lambda: boton_presionado('B'))
+boton_B.pack(side=tk.LEFT, padx=5, pady=5)
 
-boton_C = tk.Button(ventana, text="Prender 3er Grupo", command=lambda: boton_presionado('C'))
-boton_C.pack()
+boton_C = tk.Button(frame_botones, text="Prender 3er Grupo", command=lambda: boton_presionado('C'))
+boton_C.pack(side=tk.LEFT, padx=5, pady=5)
 
-boton_D = tk.Button(ventana, text="Prender 4to Grupo", command=lambda: boton_presionado('D'))
-boton_D.pack()
+boton_D = tk.Button(frame_botones, text="Prender 4to Grupo", command=lambda: boton_presionado('D'))
+boton_D.pack(side=tk.LEFT, padx=5, pady=5)
 
-boton_E = tk.Button(ventana, text="Apagar 1er Grupo", command=lambda: boton_presionado('E'))
-boton_E.pack()
-
-boton_F = tk.Button(ventana, text="Apagar 2do Grupo", command=lambda: boton_presionado('F'))
-boton_F.pack()
-
-boton_G = tk.Button(ventana, text="Apagar 3er Grupo", command=lambda: boton_presionado('G'))
-boton_G.pack()
-
-boton_H = tk.Button(ventana, text="Apagar 4to Grupo", command=lambda: boton_presionado('H'))
-boton_H.pack()
+boton_E = tk.Button(frame_botones, text="Apagar TODOS los Grupo", command=lambda: boton_presionado('E'))
+boton_E.pack(side=tk.LEFT, padx=5, pady=5)
 
 # Bucle principal para recibir y procesar datos de Arduino
 def leer_datos_desde_arduino():
