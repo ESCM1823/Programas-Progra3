@@ -35,16 +35,22 @@ void loop() {
     // Pre-orden
     Serial.println("PreOrden ON");
     digitalWrite(ledAmarillo, HIGH);
+    Serial.println(4);
     delay(500);
     digitalWrite(ledAmarillo, LOW);
+    Serial.println(0);
     delay(500);
     digitalWrite(ledVerde, HIGH);
+    Serial.println(2);
     delay(500);
     digitalWrite(ledVerde, LOW);
+    Serial.println(0);
     delay(500);
     digitalWrite(ledRojo, HIGH);
+    Serial.println(6);
     delay(500);
     digitalWrite(ledRojo, LOW);
+    Serial.println(0);
     delay(500);
     Serial.println("PreOrden OFF");
     delay(1000);
@@ -54,16 +60,22 @@ void loop() {
     // In-orden
     Serial.println("InOrden ON");
     digitalWrite(ledVerde, HIGH);
+    Serial.println(2);
     delay(500);
     digitalWrite(ledVerde, LOW);
+    Serial.println(0);
     delay(500);
     digitalWrite(ledAmarillo, HIGH);
+    Serial.println(4);
     delay(500);
     digitalWrite(ledAmarillo, LOW);
+    Serial.println(0);
     delay(500);
     digitalWrite(ledRojo, HIGH);
+    Serial.println(6);
     delay(500);
     digitalWrite(ledRojo, LOW);
+    Serial.println(0);
     delay(500);
     Serial.println("InOrden OFF");
     delay(1000);
@@ -73,16 +85,22 @@ void loop() {
     // Post-orden
     Serial.println("PostOrden ON");
     digitalWrite(ledVerde, HIGH);
+    Serial.println(2);
     delay(500);
     digitalWrite(ledVerde, LOW);
+    Serial.println(0);
     delay(500);
     digitalWrite(ledRojo, HIGH);
+    Serial.println(6);
     delay(500);
     digitalWrite(ledRojo, LOW);
+    Serial.println(0);
     delay(500);
     digitalWrite(ledAmarillo, HIGH);
+    Serial.println(4);
     delay(500);
     digitalWrite(ledAmarillo, LOW);
+    Serial.println(0);
     delay(500);
     Serial.println("PostOrden OFF");
     delay(1000);

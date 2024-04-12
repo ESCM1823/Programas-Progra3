@@ -26,10 +26,10 @@ def update():
 
 #ventana de Tkinter
 root = tk.Tk()
-root.title("Arduino Data Plotter")
+root.title("2do Examen Parcial")
 
 # Etiqueta para mostrar el valor del potenciómetro
-pot_label = tk.Label(root, text="", font=("Arial", 12))
+pot_label = tk.Label(root, text="", font=("Comic Sans MS", 12))
 pot_label.place(x=7, y=70)  # Colocar en la esquina superior izquierda
 
 # Dimensiones de la pantalla
