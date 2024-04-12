@@ -5,5 +5,6 @@
 ### 📁<a href = "Tarea4"> Laboratorio #4 </a>
 ### 📁<a href = "Tarea5"> Laboratorio #5 </a>
 ### 📁<a href = "Tarea6"> Laboratorio #6 </a>
+### 📁<a href = "Tarea7"> Laboratorio #7(2do Examen) </a>
 ### 📁<a href = "Preparación para 1er parcial"> Preparación para 1er parcial </a>
 ### 📁<a href = "ProgramasEnClase"> Programas En Clase </a>
