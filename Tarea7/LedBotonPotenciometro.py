@@ -36,16 +36,10 @@ def handle_code(code):
         # Encender el círculo correspondiente al código recibido
         if digit == 2:
             turn_on_circle(circles[0], "green")
-            canvas.itemconfig(small_rectangle, fill="blue")
-            root.after(100, lambda: canvas.itemconfig(small_rectangle, fill="white"))
         elif digit == 4:
             turn_on_circle(circles[1], "yellow")
-            canvas.itemconfig(small_rectangle2, fill="blue")
-            root.after(100, lambda: canvas.itemconfig(small_rectangle2, fill="white"))
         elif digit == 6:
             turn_on_circle(circles[2], "red")
-            canvas.itemconfig(small_rectangle3, fill="blue")
-            root.after(100, lambda: canvas.itemconfig(small_rectangle3, fill="white"))
         # Actualizar el valor de la barra de potenciómetro
         update_bar_graph(digit)
     except ValueError:
@@ -72,7 +66,7 @@ def update_bar_graph(value):
 # Configuración de la ventana de Tkinter
 root = tk.Tk()
 root.title("2do Examen Parcial")
-root.geometry("1000x500")  # Ajustar el tamaño de la ventana
+root.geometry("500x500")  # Ajustar el tamaño de la ventana
 
 # Configuración de la gráfica de barras
 canvas = tk.Canvas(root, width=300, height=350, bg='white')  # Ajustar el tamaño del lienzo
@@ -85,15 +79,10 @@ for i in range(3):
     circle = canvas.create_oval(25 + i * 100, 50, 75 + i * 100, 100, outline="black", width=2)  # Ajustar la posición de los círculos
     canvas.create_text(50 + i * 100, 75, text=str(i+1), font=("Comic Sans MS", 12))  # Ajustar la posición del texto
     circles.append(circle)
-    
-# Cuadro pequeño a la derecha de la barra
-small_rectangle = canvas.create_rectangle(200, 215, 225, 230, fill='white')
-small_rectangle2 = canvas.create_rectangle(200, 235, 225, 250, fill='white')
-small_rectangle3 = canvas.create_rectangle(200, 255, 225, 270, fill='white')
 
-canvas.create_text(265, 223, text="InOrden", font=("Comic Sans MS", 10), anchor=tk.CENTER)
-canvas.create_text(265, 243, text="PostOrden", font=("Comic Sans MS", 10), anchor=tk.CENTER)
-canvas.create_text(265, 263, text="PreOrden", font=("Comic Sans MS", 10), anchor=tk.CENTER)
+canvas.create_text(265, 223, text="PreOrden", font=("Comic Sans MS", 10), anchor=tk.CENTER)
+canvas.create_text(265, 243, text="InOrden", font=("Comic Sans MS", 10), anchor=tk.CENTER)
+canvas.create_text(265, 263, text="PostOrden", font=("Comic Sans MS", 10), anchor=tk.CENTER)
 
 # Crear y ejecutar el hilo para leer datos del puerto serie
 serial_thread = threading.Thread(target=serial_reader)
