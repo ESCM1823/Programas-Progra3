@@ -69,7 +69,7 @@ root.title("2do Examen Parcial")
 root.geometry("500x500")  # Ajustar el tamaño de la ventana
 
 # Configuración de la gráfica de barras
-canvas = tk.Canvas(root, width=300, height=350, bg='white')  # Ajustar el tamaño del lienzo
+canvas = tk.Canvas(root, width=300, height=350, bg='medium turquoise')  # Ajustar el tamaño del lienzo
 canvas.pack()
 bar = canvas.create_rectangle(50, 450, 100, 450, fill='cyan')  # Rectángulo que representa la barra de potenciómetro
 canvas.create_text(75, 100, text=f"", font=("Comic Sans MS", 12), anchor=tk.CENTER)  # Nombre del potenciómetro
