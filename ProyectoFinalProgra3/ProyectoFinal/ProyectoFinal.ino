@@ -22,7 +22,7 @@ void loop() {
       digitalWrite(abrirPuerta, HIGH);
       for (angulo = 0; angulo <= 90; angulo += 1) {
         servoMotor.write(angulo);  // Escribir el ángulo en el servo
-        delay(20);  // Pequeña pausa para dar tiempo al servo de moverse
+        delay(20);                 // Pequeña pausa para dar tiempo al servo de moverse
       }
       digitalWrite(abrirPuerta, LOW);
     } else if (numMonitorSerial == '0') {
@@ -30,7 +30,7 @@ void loop() {
       digitalWrite(cerrarPuerta, HIGH);
       for (angulo = 90; angulo >= 0; angulo -= 1) {
         servoMotor.write(angulo);  // Escribir el ángulo en el servo
-        delay(20);  // Pequeña pausa para dar tiempo al servo de moverse
+        delay(20);                 // Pequeña pausa para dar tiempo al servo de moverse
       }
       digitalWrite(cerrarPuerta, LOW);
     }
