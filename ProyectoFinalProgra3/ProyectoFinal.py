@@ -1,4 +1,4 @@
-import cv2, serial
+import cv2, serial, time
 import tkinter as tk
 from PIL import Image, ImageTk
 
@@ -27,10 +27,12 @@ def update_frame():
     faces = face_cascade.detectMultiScale(gray, 1.1, 4)
 
     if len(faces) > 0:
+        time.sleep(2)
         send_command('1')
         for (x, y, w, h) in faces:
             cv2.rectangle(img, (x, y), (x+w, y+h), (255, 0, 0), 2)
     else:
+        time.sleep(2)
         send_command('0')
 
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
