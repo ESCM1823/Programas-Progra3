@@ -8,9 +8,14 @@ cap = cv2.VideoCapture(0)
 cap.set(cv2.CAP_PROP_FPS, 30)
 ser = serial.Serial('COM4', 9600)
 
+last_command = None  # Almacenar el último comando enviado
+
 def send_command(command):
-    ser.write(command.encode())
-    print(f"Comando enviado: {command}")
+    global last_command
+    if command != last_command:
+        ser.write(command.encode())
+        print(f"Comando enviado: {command}")
+        last_command = command
 
 def update_frame():
     _, img = cap.read()
@@ -21,8 +26,12 @@ def update_frame():
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     faces = face_cascade.detectMultiScale(gray, 1.1, 4)
 
-    for (x, y, w, h) in faces:
-        cv2.rectangle(img, (x, y), (x+w, y+h), (255, 0, 0), 2)
+    if len(faces) > 0:
+        send_command('1')
+        for (x, y, w, h) in faces:
+            cv2.rectangle(img, (x, y), (x+w, y+h), (255, 0, 0), 2)
+    else:
+        send_command('0')
 
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     img = Image.fromarray(img)
@@ -32,20 +41,12 @@ def update_frame():
     label.after(10, update_frame)  # Actualizar la imagen cada 10 milisegundos
 
 root = tk.Tk()
-root.title("Reconocimiento Facial")
+root.title("Sistema de Securidad Reconocimiento Facial")
 
 label = tk.Label(root)
 label.pack(padx=10, pady=10)
 
-update_frame() 
-
-# Funciones para enviar comandos
-button_1 = tk.Button(root, text="Abrir puerta", bg="green", command=lambda: send_command('1'))
-button_1.pack(side=tk.TOP, padx=10, pady=10)
-
-button_0 = tk.Button(root, text="Cerrar puerta", bg="red", command=lambda: send_command('0'))
-button_0.pack(side=tk.TOP, padx=10, pady=10)
-
+update_frame()
 root.mainloop()
 
 cap.release()
