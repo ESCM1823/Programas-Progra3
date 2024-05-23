@@ -2,7 +2,7 @@
 
 Servo servoMotor;  // Crear un objeto de tipo Servo
 
-int angulo = 0, cerrarPuerta = 3, abrirPuerta = 4;
+int anguloAbierto = 90, anguloCerrado = 0, cerrarPuerta = 3, abrirPuerta = 4;
 
 void setup() {
   servoMotor.attach(2);  // Conectar el servo al pin 2
@@ -20,18 +20,16 @@ void loop() {
     if (numMonitorSerial == '1') {
       Serial.println("Se abrio puerta");
       digitalWrite(abrirPuerta, HIGH);
-      for (angulo = 0; angulo <= 90; angulo += 1) {
-        servoMotor.write(angulo);  // Escribir el ángulo en el servo
-        delay(20);                 // Pequeña pausa para dar tiempo al servo de moverse
-      }
+      delay(1000);
+      servoMotor.write(anguloAbierto);  // Escribir el ángulo en el servo
+      delay(500);
       digitalWrite(abrirPuerta, LOW);
     } else if (numMonitorSerial == '0') {
       Serial.println("Se cerro puerta");
       digitalWrite(cerrarPuerta, HIGH);
-      for (angulo = 90; angulo >= 0; angulo -= 1) {
-        servoMotor.write(angulo);  // Escribir el ángulo en el servo
-        delay(20);                 // Pequeña pausa para dar tiempo al servo de moverse
-      }
+      delay(1000);
+      servoMotor.write(anguloCerrado);  // Escribir el ángulo en el servo
+      delay(500);
       digitalWrite(cerrarPuerta, LOW);
     }
   }

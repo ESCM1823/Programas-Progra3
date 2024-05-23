@@ -1,21 +1,40 @@
-import cv2, serial, time
+import cv2, serial, time, threading
 import tkinter as tk
 from PIL import Image, ImageTk
 
-face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
-
-cap = cv2.VideoCapture(0)
-cap.set(cv2.CAP_PROP_FPS, 30)
+# Configurar la comunicación serial
 ser = serial.Serial('COM4', 9600)
 
-last_command = None  # Almacenar el último comando enviado
+# Función para leer datos del puerto serie
+def serial_reader():
+    while True:
+        if ser.in_waiting > 0:
+            data = ser.readline().decode().strip()
+            if data:
+                handle_code(data)
+
+def handle_code(code):
+    try:
+        digit = int(code)
+        print("Código recibido:", digit)
+    except ValueError:
+        print("Mensaje desde Arduino:", code.strip())
+        if code == 'Se abrio puerta':
+            button_canvas.itemconfig(button_1, fill="green")
+            button_canvas.itemconfig(button_0, fill="white")
+        elif code == 'Se cerro puerta':
+            button_canvas.itemconfig(button_0, fill="red")
+            button_canvas.itemconfig(button_1, fill="white")
 
 def send_command(command):
-    global last_command
-    if command != last_command:
-        ser.write(command.encode())
-        print(f"Comando enviado: {command}")
-        last_command = command
+    ser.write(command.encode())
+    print(f"Comando enviado: {command}")
+    if command == '1':
+        button_canvas.itemconfig(button_1, fill="green")
+        button_canvas.itemconfig(button_0, fill="white")
+    elif command == '0':
+        button_canvas.itemconfig(button_0, fill="red")
+        button_canvas.itemconfig(button_1, fill="white")
 
 def update_frame():
     _, img = cap.read()
@@ -28,28 +47,68 @@ def update_frame():
 
     if len(faces) > 0:
         time.sleep(2)
-        send_command('1')
-        for (x, y, w, h) in faces:
-            cv2.rectangle(img, (x, y), (x+w, y+h), (255, 0, 0), 2)
+        send_command('1')  # Enviar comando '1' si se detecta un rostro
     else:
         time.sleep(2)
-        send_command('0')
+        send_command('0')  # Enviar comando '0' si no se detecta ningún rostro
+
+    for (x, y, w, h) in faces:
+        cv2.rectangle(img, (x, y), (x+w, y+h), (255, 0, 0), 2)
 
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     img = Image.fromarray(img)
-    img = ImageTk.PhotoImage(img)
-    label.img = img  # Mantener una referencia al objeto PhotoImage
-    label.config(image=img)
-    label.after(10, update_frame)  # Actualizar la imagen cada 10 milisegundos
+    imgtk = ImageTk.PhotoImage(image=img)
+    label.imgtk = imgtk
+    label.configure(image=imgtk)
+    label.after(30, update_frame)
 
+def abrir_puerta():
+    send_command('1')
+
+def cerrar_puerta():
+    send_command('0')
+
+# Cargar el clasificador de rostros
+face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+
+# Capturar video de la cámara
+cap = cv2.VideoCapture(0)
+cap.set(cv2.CAP_PROP_FPS, 30)
+
+# Crear la ventana principal
 root = tk.Tk()
-root.title("Sistema de Securidad Reconocimiento Facial")
+root.title("Proyecto Final")
 
-label = tk.Label(root)
-label.pack(padx=10, pady=10)
+# Crear un marco principal
+main_frame = tk.Frame(root)
+main_frame.pack(fill=tk.BOTH, expand=True)
 
+# Crear un canvas para la imagen de la cámara
+canvas = tk.Canvas(main_frame, width=640, height=480)
+canvas.pack()
+
+# Crear un label para mostrar la imagen de la cámara
+label = tk.Label(canvas)
+label.pack()
+
+# Crear otro canvas para los botones
+button_canvas = tk.Canvas(main_frame, width=640, height=100, bg='white')
+button_canvas.pack()
+
+# Crear botones circulares en el canvas de botones
+button_1 = button_canvas.create_oval(70, 20, 130, 80, outline="black", fill="white")
+button_0 = button_canvas.create_oval(510, 20, 570, 80, outline="black", fill="white")
+
+# Crear y ejecutar el hilo para leer datos del puerto serie
+serial_thread = threading.Thread(target=serial_reader)
+serial_thread.daemon = True
+serial_thread.start()
+
+# Iniciar la actualización de frames
 update_frame()
+
+# Iniciar el bucle principal de Tkinter
 root.mainloop()
 
+# Liberar la captura de video
 cap.release()
-cv2.destroyAllWindows()
