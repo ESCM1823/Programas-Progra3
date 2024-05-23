@@ -1,0 +1,18 @@
+CREATE DATABASE ReconocimientoFacial
+
+USE ReconocimientoFacial
+
+CREATE TABLE USUARIO(
+numUsuario INT IDENTITY PRIMARY KEY NOT NULL,
+estadoPuerta INT NOT NULL, --1 ABIERTO 0 CERRADO
+diaEntrada SMALLDATETIME NOT NULL
+);
+
+INSERT INTO USUARIO(estadoPuerta, diaEntrada)
+VALUES (1, '2007-05-08 12:35:29')
+
+
+INSERT INTO USUARIO(estadoPuerta, diaEntrada)
+VALUES (0, '2024-05-08 12:35:29')
+
+SELECT * FROM USUARIO -- VER DATOS

@@ -46,10 +46,10 @@ def update_frame():
     faces = face_cascade.detectMultiScale(gray, 1.1, 4)
 
     if len(faces) > 0:
-        time.sleep(2)
+        time.sleep(1.5)
         send_command('1')  # Enviar comando '1' si se detecta un rostro
     else:
-        time.sleep(2)
+        time.sleep(1.5)
         send_command('0')  # Enviar comando '0' si no se detecta ningún rostro
 
     for (x, y, w, h) in faces:
