@@ -2,115 +2,136 @@ import cv2, serial, time, threading
 import tkinter as tk
 from PIL import Image, ImageTk
 
-# Configurar el puerto
-ser = serial.Serial('COM4', 9600)
+# Clase para manejar la comunicación serial
+class SerialHandler:
+    def __init__(self, port):
+        self.ser = serial.Serial(port, 9600)
 
-# Función para leer datos del puerto serie
-def serial_reader():
-    while True:
-        if ser.in_waiting > 0:
-            data = ser.readline().decode().strip()
-            if data:
-                handle_code(data)
+    # Leer datos del puerto serie en un bucle
+    def read_serial(self, handle_code):
+        while True:
+            if self.ser.in_waiting > 0:
+                data = self.ser.readline().decode().strip()
+                if data:
+                    handle_code(data)
 
-def handle_code(code):
-    try:
-        digit = int(code)
-        print("Código recibido:", digit)
-    except ValueError:
-        print("Mensaje desde Arduino:", code.strip())
-        if code == 'Se abrio puerta':
-            button_canvas.itemconfig(button_1, fill="green")
-            button_canvas.itemconfig(button_0, fill="white")
-        elif code == 'Se cerro puerta':
-            button_canvas.itemconfig(button_0, fill="red")
-            button_canvas.itemconfig(button_1, fill="white")
+    # Enviar comandos al puerto serie
+    def send_command(self, command):
+        self.ser.write(command.encode())
+        print(f"Comando enviado: {command}")
 
-# Función para leer datos del Arduino
-def send_command(command):
-    ser.write(command.encode())
-    print(f"Comando enviado: {command}")
-    if command == '1':
-        button_canvas.itemconfig(button_1, fill="green")
-        button_canvas.itemconfig(button_0, fill="white")
-    elif command == '0':
-        button_canvas.itemconfig(button_0, fill="red")
-        button_canvas.itemconfig(button_1, fill="white")
+# Clase para manejar la cámara
+class CameraHandler:
+    def __init__(self, cascade_path):
+        self.face_cascade = cv2.CascadeClassifier(cascade_path)
+        self.cap = cv2.VideoCapture(0)
+        self.cap.set(cv2.CAP_PROP_FPS, 30)
 
-# Función para la camara
-def update_frame():
-    _, img = cap.read()
-    if not _:
-        print("Error al leer la imagen de la cámara.")
-        return
+    # Obtener un frame de la cámara
+    def get_frame(self):
+        ret, img = self.cap.read()
+        if not ret:
+            print("Error al leer la imagen de la cámara.")
+            return None
+        return img
 
-    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    faces = face_cascade.detectMultiScale(gray, 1.1, 4)
+    # Liberar la cámara
+    def release(self):
+        self.cap.release()
 
-    if len(faces) > 0:
-        time.sleep(1.5)
-        send_command('1')  # Enviar comando '1' si se detecta un rostro
-    else:
-        time.sleep(1.5)
-        send_command('0')  # Enviar comando '0' si no se detecta ningún rostro
+# Clase principal de la aplicación
+class App:
+    def __init__(self, root, serial_port, cascade_path):
+        self.root = root
+        self.serial_handler = SerialHandler(serial_port)
+        self.camera_handler = CameraHandler(cascade_path)
 
-    for (x, y, w, h) in faces:
-        cv2.rectangle(img, (x, y), (x+w, y+h), (255, 0, 0), 2)
+        self.root.title("Proyecto Final")
+        self.main_frame = tk.Frame(root)
+        self.main_frame.pack(fill=tk.BOTH, expand=True)
 
-    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-    img = Image.fromarray(img)
-    imgtk = ImageTk.PhotoImage(image=img)
-    label.imgtk = imgtk
-    label.configure(image=imgtk)
-    label.after(30, update_frame)
+        self.canvas = tk.Canvas(self.main_frame, width=640, height=480)
+        self.canvas.pack()
+        self.label = tk.Label(self.canvas)
+        self.label.pack()
 
-def abrir_puerta():
-    send_command('1')
+        self.button_canvas = tk.Canvas(self.main_frame, width=640, height=100, bg='white')
+        self.button_canvas.pack()
+        self.button_1 = self.button_canvas.create_oval(70, 20, 130, 80, outline="black", fill="white")
+        self.button_0 = self.button_canvas.create_oval(510, 20, 570, 80, outline="black", fill="white")
 
-def cerrar_puerta():
-    send_command('0')
+        # Iniciar hilo para leer datos del puerto serie
+        self.serial_thread = threading.Thread(target=self.serial_handler.read_serial, args=(self.handle_code,))
+        self.serial_thread.daemon = True
+        self.serial_thread.start()
 
-# Cargar el clasificador de rostros
-face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+        # Iniciar la actualización de frames
+        self.update_frame()
 
-# Capturar video de la cámara
-cap = cv2.VideoCapture(0)
-cap.set(cv2.CAP_PROP_FPS, 30)
+    # Manejar los códigos recibidos del puerto serie
+    def handle_code(self, code):
+        try:
+            digit = int(code)
+            print("Código recibido:", digit)
+        except ValueError:
+            print("Mensaje desde Arduino:", code.strip())
+            if code == 'Se abrio puerta':
+                self.button_canvas.itemconfig(self.button_1, fill="green")
+                self.button_canvas.itemconfig(self.button_0, fill="white")
+            elif code == 'Se cerro puerta':
+                self.button_canvas.itemconfig(self.button_0, fill="red")
+                self.button_canvas.itemconfig(self.button_1, fill="white")
 
-# Crear la ventana principal
-root = tk.Tk()
-root.title("Proyecto Final")
+    # Enviar comandos al Arduino y actualizar los botones
+    def send_command(self, command):
+        self.serial_handler.send_command(command)
+        if command == '1':
+            self.button_canvas.itemconfig(self.button_1, fill="green")
+            self.button_canvas.itemconfig(self.button_0, fill="white")
+        elif command == '0':
+            self.button_canvas.itemconfig(self.button_0, fill="red")
+            self.button_canvas.itemconfig(self.button_1, fill="white")
 
-# Crear un marco principal
-main_frame = tk.Frame(root)
-main_frame.pack(fill=tk.BOTH, expand=True)
+    # Actualizar el frame de la cámara y detectar rostros
+    def update_frame(self):
+        img = self.camera_handler.get_frame()
+        if img is None:
+            return
 
-# Crear un canvas para la imagen de la cámara
-canvas = tk.Canvas(main_frame, width=640, height=480)
-canvas.pack()
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        faces = self.camera_handler.face_cascade.detectMultiScale(gray, 1.1, 4)
 
-# Crear un label para mostrar la imagen de la cámara
-label = tk.Label(canvas)
-label.pack()
+        if len(faces) > 0:
+            time.sleep(1.5)
+            self.send_command('1')
+        else:
+            time.sleep(1.5)
+            self.send_command('0')
 
-# Crear otro canvas para los botones
-button_canvas = tk.Canvas(main_frame, width=640, height=100, bg='white')
-button_canvas.pack()
+        for (x, y, w, h) in faces:
+            cv2.rectangle(img, (x, y), (x + w, y + h), (255, 0, 0), 2)
 
-# Crear botones circulares en el canvas de botones
-button_1 = button_canvas.create_oval(70, 20, 130, 80, outline="black", fill="white")
-button_0 = button_canvas.create_oval(510, 20, 570, 80, outline="black", fill="white")
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        img = Image.fromarray(img)
+        imgtk = ImageTk.PhotoImage(image=img)
+        self.label.imgtk = imgtk
+        self.label.configure(image=imgtk)
+        self.label.after(30, self.update_frame)
 
-# Crear y ejecutar el hilo para leer datos del puerto serie
-serial_thread = threading.Thread(target=serial_reader)
-serial_thread.daemon = True
-serial_thread.start()
+    # Métodos para abrir y cerrar la puerta
+    def abrir_puerta(self):
+        self.send_command('1')
 
-# Iniciar la actualización de frames
-update_frame()
+    def cerrar_puerta(self):
+        self.send_command('0')
 
-# Iniciar el bucle principal de Tkinter
-root.mainloop()
+    # Liberar recursos al cerrar la aplicación
+    def on_closing(self):
+        self.camera_handler.release()
+        self.root.destroy()
 
-# Liberar la captura de video
-cap.release()
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = App(root, 'COM4', 'haarcascade_frontalface_default.xml')
+    root.protocol("WM_DELETE_WINDOW", app.on_closing)
+    root.mainloop()
