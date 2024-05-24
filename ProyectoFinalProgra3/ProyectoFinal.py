@@ -2,7 +2,7 @@ import cv2, serial, time, threading
 import tkinter as tk
 from PIL import Image, ImageTk
 
-# Configurar la comunicación serial
+# Configurar el puerto
 ser = serial.Serial('COM4', 9600)
 
 # Función para leer datos del puerto serie
@@ -26,6 +26,7 @@ def handle_code(code):
             button_canvas.itemconfig(button_0, fill="red")
             button_canvas.itemconfig(button_1, fill="white")
 
+# Función para leer datos del Arduino
 def send_command(command):
     ser.write(command.encode())
     print(f"Comando enviado: {command}")
@@ -36,6 +37,7 @@ def send_command(command):
         button_canvas.itemconfig(button_0, fill="red")
         button_canvas.itemconfig(button_1, fill="white")
 
+# Función para la camara
 def update_frame():
     _, img = cap.read()
     if not _:

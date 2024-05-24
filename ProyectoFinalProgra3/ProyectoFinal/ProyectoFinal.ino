@@ -20,16 +20,16 @@ void loop() {
     if (numMonitorSerial == '1') {
       Serial.println("Se abrio puerta");
       digitalWrite(abrirPuerta, HIGH);
-      delay(1000);
+      delay(50);
       servoMotor.write(anguloAbierto);  // Escribir el ángulo en el servo
-      delay(500);
+      delay(50);
       digitalWrite(abrirPuerta, LOW);
     } else if (numMonitorSerial == '0') {
       Serial.println("Se cerro puerta");
       digitalWrite(cerrarPuerta, HIGH);
-      delay(1000);
+      delay(50);
       servoMotor.write(anguloCerrado);  // Escribir el ángulo en el servo
-      delay(500);
+      delay(50);
       digitalWrite(cerrarPuerta, LOW);
     }
   }
