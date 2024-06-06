@@ -1,18 +1,13 @@
-CREATE DATABASE ReconocimientoFacial
+CREATE DATABASE dbCamaraArduino
 
-USE ReconocimientoFacial
+USE dbCamaraArduino
 
-CREATE TABLE USUARIO(
-numUsuario INT IDENTITY PRIMARY KEY NOT NULL,
-estadoPuerta INT NOT NULL, --1 ABIERTO 0 CERRADO
-diaEntrada SMALLDATETIME NOT NULL
-);
+CREATE TABLE ArduinoInfo(
+	id_usuario INT PRIMARY KEY NOT NULL IDENTITY(1,1),
+	mensaje VARCHAR(250) NOT NULL,
+)
 
-INSERT INTO USUARIO(estadoPuerta, diaEntrada)
-VALUES (1, '2007-05-08 12:35:29')
+INSERT INTO ArduinoInfo (mensaje) VALUES ('Hola test');
+SELECT * FROM ArduinoInfo
 
-
-INSERT INTO USUARIO(estadoPuerta, diaEntrada)
-VALUES (0, '2024-05-08 12:35:29')
-
-SELECT * FROM USUARIO -- VER DATOS
+SELECT @@SERVERNAME
